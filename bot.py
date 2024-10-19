@@ -1,4 +1,5 @@
 import logging
+import telegram
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters
 
