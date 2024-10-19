@@ -1,6 +1,10 @@
 import logging
+import nest_asyncio
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+
+# Apply nest_asyncio
+nest_asyncio.apply()
 
 # Enable logging
 logging.basicConfig(
