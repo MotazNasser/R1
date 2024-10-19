@@ -30,23 +30,6 @@ async def main():
     @client.on(events.NewMessage())
     async def handler(event):
         message_text = event.message.message
-        print(f"Received forwarded message: {message_text}")  # Print received message
+        print(f"Received message: {message_text}")  # Print received message
 
-        await parse_trading_signal(message_text)
-
-    await client.run_until_disconnected()
-
-async def parse_trading_signal(message):
-    print(f"Parsing signal: {message}")
-
-    # Regular expression to parse the signal
-    match = re.search(r'🤖 Buy\s+\$([\w]+)\/([\w]+)', message)
-    
-    if match:
-        symbol = match.group(0).replace('🤖 Buy $', '').replace('🏷️', '').strip()
-        trading_pair = f"{symbol.replace('/', '')}USDT"
-
-        # Ask for the quantity to buy in USDT
-        quantity_usdt = float(input("Enter the quantity to buy in USDT: "))
-        
-        # Fetch the current
+   
