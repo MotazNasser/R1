@@ -1,35 +1,36 @@
-import nest_asyncio
-from telethon import TelegramClient, events
-import uuid
-import os
-import asyncio
-import re
-from binance.client import Client
+import logging
+from telegram import Update
+from telegram.ext import Application, MessageHandler, filters
 
-# Allow nested event loops
-nest_asyncio.apply()
+# Your credentials
+BOT_TOKEN = '7901330626:AAGLbAn15rRAccFtkDcZi1ast_zBGm0rGhg'  # Replace this with your actual bot token
 
-# Retrieve values from environment variables
-api_id = int(os.environ['API_ID'])  # Your actual API ID (as an integer)
-api_hash = os.environ['API_HASH']  # Your actual API Hash (keep it as a string)
-bot_token = os.environ['BOT_TOKEN']  # Your actual Bot Token (keep it as a string)
+# Set up logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.DEBUG  # Change to INFO or DEBUG for detailed logs
+)
+logger = logging.getLogger(__name__)
 
-# Initialize the Binance client
-binance_api_key = os.environ['BINANCE_API_KEY']  # Your actual Binance API Key
-binance_api_secret = os.environ['BINANCE_API_SECRET']  # Your actual Binance API Secret
-binance_client = Client(binance_api_key, binance_api_secret)
+# Define a simple message handler function
+async def message_handler(update: Update, context) -> None:
+    text = update.message.text
+    logger.info(f"Received message: {text}")  # Log received message
+    await update.message.reply_text("What do you want from me?")  # Send a reply
 
+# Main function to start the bot
 async def main():
-    session_name = str(uuid.uuid4())
-    client = TelegramClient(session_name, api_id, api_hash)
+    # Initialize the bot application
+    application = Application.builder().token(BOT_TOKEN).build()
+    
+    # Add a message handler for text messages
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
-    await client.start(bot_token=bot_token)
+    logger.info("Bot started and polling for updates...")
+    await application.start()  # Start the bot
+    await application.updater.start_polling()  # Polling for updates
+    await application.updater.idle()  # Keep the bot running until interrupted
 
-    print("Bot is running and listening for forwarded messages...")  # Debug message
-
-    @client.on(events.NewMessage())
-    async def handler(event):
-        message_text = event.message.message
-        print(f"Received message: {message_text}")  # Print received message
-
-   
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())  # Use asyncio to run the bot
