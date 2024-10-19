@@ -1,4 +1,0 @@
-python-binance
-telethon
-nest-asyncio
-
