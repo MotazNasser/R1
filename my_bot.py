@@ -1,23 +1,21 @@
-import nest_asyncio
-nest_asyncio.apply()
-
+import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+
+# Get the token from environment variables
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # Define the response when the bot receives the '/start' command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text('Hello! I am your bot. How can I help you today?')
 
-# Define the response to any text message
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_message = update.message.text
-    await update.message.reply_text(f'You said: {user_message}')
+# Other bot functions...
 
 async def main() -> None:
-    app = ApplicationBuilder().token('7901330626:AAGLbAn15rRAccFtkDcZi1ast_zBGm0rGhg').build()
-
+    app = ApplicationBuilder().token(TOKEN).build()
+    
     app.add_handler(CommandHandler('start', start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+    # Add other handlers...
 
     await app.run_polling()
 
